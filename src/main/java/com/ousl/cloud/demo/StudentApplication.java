@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @SpringBootApplication
 @RestController
@@ -41,10 +44,36 @@ public class StudentApplication {
 		return repository.findAll(Sort.by("id"));
 	}
 
+	@GetMapping("/{id}")
+	public Student getStudent(@PathVariable Long id) {
+	    return repository.findById(id)
+	            .orElseThrow();
+	}
+
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Student addStudent(@RequestBody StudentRequest request) {
 		return repository.save(new Student(request.name().trim(), request.course().trim()));
+	}
+
+	@PutMapping("/{id}")
+	public Student updateStudent(
+	        @PathVariable Long id,
+	        @RequestBody StudentRequest request) {
+	
+	    Student student = repository.findById(id)
+	            .orElseThrow();
+	
+	    student.setName(request.name().trim());
+	    student.setCourse(request.course().trim());
+	
+	    return repository.save(student);
+	}
+
+	@DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteStudent(@PathVariable Long id) {
+	    repository.deleteById(id);
 	}
 }
 
@@ -84,6 +113,14 @@ class Student {
 	public String getCourse() {
 		return course;
 	}
+
+	public void setName(String name) {
+    this.name = name;
+}
+
+public void setCourse(String course) {
+    this.course = course;
+}
 }
 
 record StudentRequest(
