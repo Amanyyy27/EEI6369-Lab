@@ -46,8 +46,8 @@ public class StudentApplication {
 
 	@GetMapping("/{id}")
 	public Student getStudent(@PathVariable Long id) {
-	    return repository.findById(id)
-	            .orElseThrow();
+		return repository.findById(id)
+				.orElseThrow();
 	}
 
 	@PostMapping
@@ -58,22 +58,27 @@ public class StudentApplication {
 
 	@PutMapping("/{id}")
 	public Student updateStudent(
-	        @PathVariable Long id,
-	        @RequestBody StudentRequest request) {
-	
-	    Student student = repository.findById(id)
-	            .orElseThrow();
-	
-	    student.setName(request.name().trim());
-	    student.setCourse(request.course().trim());
-	
-	    return repository.save(student);
+			@PathVariable Long id,
+			@RequestBody StudentRequest request) {
+
+		Student student = repository.findById(id)
+				.orElseThrow();
+
+		if (request.name() != null) {
+			student.setName(request.name().trim());
+		}
+
+		if (request.course() != null) {
+			student.setCourse(request.course().trim());
+		}
+
+		return repository.save(student);
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteStudent(@PathVariable Long id) {
-	    repository.deleteById(id);
+		repository.deleteById(id);
 	}
 }
 
@@ -115,12 +120,12 @@ class Student {
 	}
 
 	public void setName(String name) {
-    this.name = name;
-}
+		this.name = name;
+	}
 
-public void setCourse(String course) {
-    this.course = course;
-}
+	public void setCourse(String course) {
+		this.course = course;
+	}
 }
 
 record StudentRequest(
