@@ -75,6 +75,11 @@ public class StudentApplication {
 		return repository.save(student);
 	}
 
+	@DeleteMapping
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteAllStudents() {
+	    repository.deleteAll();
+	}
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteStudent(@PathVariable Long id) {
